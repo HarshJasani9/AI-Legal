@@ -4,6 +4,7 @@ import cors from "cors";
 import helmet from "helmet";
 import { User } from "@repo/shared";
 import { connectDB } from "./config/db";
+import contractsRouter from "./routes/contracts";
 
 export const app = express();
 const port = process.env.PORT || 3001;
@@ -12,6 +13,8 @@ const port = process.env.PORT || 3001;
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+app.use("/api/contracts", contractsRouter);
 
 // Routes
 app.get("/api/health", (req: Request, res: Response) => {

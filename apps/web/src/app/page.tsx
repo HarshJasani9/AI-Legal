@@ -1,6 +1,7 @@
 "use client";
 
 import { SignInButton, UserButton, useAuth } from "@clerk/nextjs";
+import DropZone from "../components/DropZone";
 
 export default function Page() {
   const { isSignedIn } = useAuth();
@@ -20,7 +21,13 @@ export default function Page() {
       </div>
 
       <h1 className="text-4xl font-bold mb-4">Web App</h1>
-      <p className="text-gray-300">Turborepo + Next.js + Tailwind CSS + Clerk</p>
+      <p className="text-gray-300 mb-8">Turborepo + Next.js + Tailwind CSS + Clerk</p>
+
+      {isSignedIn && (
+        <div className="w-full max-w-2xl mt-8">
+          <DropZone onSuccess={(contractId) => console.log("Success! Contract ID:", contractId)} />
+        </div>
+      )}
     </main>
   );
 }
