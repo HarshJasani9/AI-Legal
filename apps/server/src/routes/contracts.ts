@@ -48,4 +48,20 @@ router.post('/upload', requireAuth, upload.single('file'), async (req, res) => {
   }
 });
 
+// GET /api/contracts - List all contracts for the current user
+router.get('/', requireAuth, async (req, res) => {
+  try {
+    const userId = req.auth?.userId;
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const contracts = await Contract.find({ userId }).sort({ createdAt: -1 });
+    res.json(contracts);
+  } catch (error) {
+    console.error('Fetch contracts error:', error);
+    res.status(500).json({ error: 'Failed to fetch contracts' });
+  }
+});
+
 export default router;
