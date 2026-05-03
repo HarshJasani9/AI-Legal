@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { User } from "@repo/shared";
 import { connectDB } from "./config/db";
 import contractsRouter from "./routes/contracts";
+import "./jobs/analyze.job";
 
 export const app = express();
 const port = process.env.PORT || 3001;
