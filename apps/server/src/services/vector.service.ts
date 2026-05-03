@@ -43,7 +43,7 @@ export async function embedAndStore(contractId: string, chunks: string[]) {
   const BATCH_SIZE = 100;
   for (let i = 0; i < vectors.length; i += BATCH_SIZE) {
     const batch = vectors.slice(i, i + BATCH_SIZE);
-    await index.upsert(batch);
+    await index.upsert(batch as any);
   }
 }
 
