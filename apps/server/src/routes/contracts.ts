@@ -3,6 +3,7 @@ import multer from 'multer';
 import { uploadPdf } from '../services/cloudinary.service';
 import { Contract } from '../models/Contract';
 import { requireAuth } from '../middleware/auth';
+import { analyzeQueue } from '../jobs/analyze.job';
 
 const router = express.Router();
 
@@ -40,6 +41,9 @@ router.post('/upload', requireAuth, upload.single('file'), async (req, res) => {
       fileSize: buffer.length,
       status: 'pending',
     });
+
+    // Add job to BullMQ for background processing
+    await analyzeQueue.add('analyze', { contractId: contract.id });
 
     res.json({ contractId: contract.id });
   } catch (error) {
