@@ -9,7 +9,7 @@ const QUEUE_NAME = "analyze-contracts";
 
 // 1. Create the Queue (Exported so routes can add jobs to it)
 export const analyzeQueue = new Queue<AnalyzeJobData>(QUEUE_NAME, {
-  connection: redisConnection,
+  connection: redisConnection as any,
 });
 
 // 2. Create the Worker (Listens for jobs in the background)
@@ -26,7 +26,7 @@ export const analyzeWorker = new Worker<AnalyzeJobData>(
     console.log(`[Worker] Completed analysis for contract ID: ${contractId}`);
   },
   {
-    connection: redisConnection,
+    connection: redisConnection as any,
   }
 );
 
