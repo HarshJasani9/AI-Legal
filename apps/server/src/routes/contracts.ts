@@ -73,6 +73,82 @@ router.get('/', requireAuth, async (req, res) => {
   }
 });
 
+// POST /api/contracts/compare - Compare two contracts
+router.post('/compare', requireAuth, async (req, res) => {
+  try {
+    const { contractIdA, contractIdB } = req.body;
+    const userId = req.auth?.userId;
+
+    if (!contractIdA || !contractIdB) {
+      return res.status(400).json({ error: 'Missing contract IDs' });
+    }
+
+    const [contractA, contractB] = await Promise.all([
+      Contract.findOne({ _id: contractIdA, userId }),
+      Contract.findOne({ _id: contractIdB, userId })
+    ]);
+
+    if (!contractA || !contractB) {
+      return res.status(404).json({ error: 'One or both contracts not found' });
+    }
+
+    const [analysisA, analysisB] = await Promise.all([
+      Analysis.findOne({ contractId: contractIdA }),
+      Analysis.findOne({ contractId: contractIdB })
+    ]);
+
+    if (!analysisA || !analysisB) {
+      return res.status(400).json({ error: 'Analyses not yet complete for both contracts' });
+    }
+
+    const prompt = `
+You are a highly precise legal AI. Compare these two versions of a contract and identify the key differences.
+Return a STRICT JSON object matching this schema exactly:
+{
+  "added": ["List of new clauses or obligations added in Version B"],
+  "removed": ["List of clauses or obligations removed from Version A"],
+  "changed": [
+    {
+      "clause": "Name of the changed clause",
+      "before": "Summary of how it was in Version A",
+      "after": "Summary of how it is in Version B"
+    }
+  ],
+  "riskChange": "improved" | "worsened" | "same"
+}
+
+Version A Summary:
+\${analysisA.summary}
+Version A Clauses:
+\${JSON.stringify(analysisA.clauses.map(c => ({ title: c.title, text: c.text })))}
+
+Version B Summary:
+\${analysisB.summary}
+Version B Clauses:
+\${JSON.stringify(analysisB.clauses.map(c => ({ title: c.title, text: c.text })))}
+`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [{ role: "system", content: "You strictly output raw JSON." }, { role: "user", content: prompt }],
+      response_format: { type: "json_object" },
+      temperature: 0.1,
+    });
+
+    const content = response.choices[0]?.message?.content;
+    if (!content) throw new Error("No output from OpenAI");
+    
+    res.json({
+      contractA,
+      contractB,
+      comparison: JSON.parse(content)
+    });
+  } catch (error) {
+    console.error('Compare error:', error);
+    res.status(500).json({ error: 'Failed to compare contracts' });
+  }
+});
+
 // GET /api/contracts/:id - Fetch contract and its analysis
 router.get('/:id', requireAuth, async (req, res) => {
   try {
