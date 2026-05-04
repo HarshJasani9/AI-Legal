@@ -14,11 +14,18 @@ declare global {
 export const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Unauthorized: Missing or invalid Bearer token" });
+    const queryToken = req.query.token as string;
+    
+    let token = "";
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    } else if (queryToken) {
+      token = queryToken;
     }
 
-    const token = authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ error: "Unauthorized: Missing token" });
+    }
     const secretKey = process.env.CLERK_SECRET_KEY;
 
     if (!secretKey) {

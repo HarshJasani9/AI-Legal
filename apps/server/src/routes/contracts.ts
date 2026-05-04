@@ -68,4 +68,66 @@ router.get('/', requireAuth, async (req, res) => {
   }
 });
 
+// GET /api/contracts/:id/stream - Server-Sent Events for analysis progress
+router.get('/:id/stream', requireAuth, async (req, res) => {
+  const contractId = req.params.id;
+  const userId = req.auth?.userId;
+
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  // Set SSE Headers
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders(); // Tell Express to send headers immediately
+
+  // Verify ownership before streaming
+  const contract = await Contract.findOne({ _id: contractId, userId });
+  if (!contract) {
+    res.write(`data: ${JSON.stringify({ error: 'Contract not found' })}\n\n`);
+    return res.end();
+  }
+
+  const sendEvent = (data: any) => {
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
+  };
+
+  const intervalId = setInterval(async () => {
+    try {
+      const currentContract = await Contract.findById(contractId);
+      if (!currentContract) {
+        clearInterval(intervalId);
+        res.end();
+        return;
+      }
+
+      let progress = 0;
+      switch(currentContract.status) {
+        case 'pending': progress = 10; break;
+        case 'analyzing': progress = 50; break;
+        case 'done': progress = 100; break;
+        case 'failed': progress = 0; break;
+      }
+
+      sendEvent({ status: currentContract.status, progress });
+
+      if (currentContract.status === 'done' || currentContract.status === 'failed') {
+        clearInterval(intervalId);
+        res.end();
+      }
+    } catch (error) {
+      console.error('SSE Error:', error);
+      clearInterval(intervalId);
+      res.end();
+    }
+  }, 2000); // Poll DB every 2 seconds
+
+  // Cleanup on client disconnect
+  req.on('close', () => {
+    clearInterval(intervalId);
+  });
+});
+
 export default router;
