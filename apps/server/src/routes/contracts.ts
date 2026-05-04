@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { uploadPdf } from '../services/cloudinary.service';
 import { Contract } from '../models/Contract';
+import { Analysis } from '../models/Analysis';
 import { requireAuth } from '../middleware/auth';
 import { analyzeQueue } from '../jobs/analyze.job';
 
