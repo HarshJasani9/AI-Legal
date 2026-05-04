@@ -1,10 +1,14 @@
 import express from 'express';
 import multer from 'multer';
 import { uploadPdf } from '../services/cloudinary.service';
+import OpenAI from 'openai';
 import { Contract } from '../models/Contract';
 import { Analysis } from '../models/Analysis';
 import { requireAuth } from '../middleware/auth';
 import { analyzeQueue } from '../jobs/analyze.job';
+import { querySimilar } from '../services/vector.service';
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const router = express.Router();
 
@@ -145,6 +149,64 @@ router.get('/:id/stream', requireAuth, async (req, res) => {
   req.on('close', () => {
     clearInterval(intervalId);
   });
+});
+
+// POST /api/contracts/:id/chat - RAG Chat Stream
+router.post('/:id/chat', requireAuth, async (req, res) => {
+  try {
+    const contractId = req.params.id;
+    const { question, history } = req.body;
+    
+    // Verify ownership
+    const contract = await Contract.findOne({ _id: contractId, userId: req.auth?.userId });
+    if (!contract) return res.status(404).json({ error: 'Contract not found' });
+
+    // 1) Get relevant chunks from Pinecone
+    const chunks = await querySimilar(contractId, question, 5);
+    const contextText = chunks.join('\n\n---\n\n');
+
+    // 2) Build strict prompt
+    const systemPrompt = `You are a highly precise legal AI assistant analyzing a contract. 
+Answer the user's question based strictly on the provided contract context below. 
+If the answer is not in the context, clearly state "I cannot find the answer in the contract." 
+Do not invent or hallucinate information. Keep answers concise.
+
+Contract Context:
+${contextText}
+`;
+
+    // 3) Call OpenAI with streaming enabled
+    const stream = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...(history || []),
+        { role: "user", content: question }
+      ],
+      stream: true,
+      temperature: 0.2, // Low temp for factual accuracy
+    });
+
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Transfer-Encoding', 'chunked');
+    res.flushHeaders();
+
+    // 4) Pipe the stream bytes back to the frontend
+    for await (const chunk of stream) {
+      const text = chunk.choices[0]?.delta?.content || "";
+      if (text) {
+        res.write(text);
+      }
+    }
+    res.end();
+  } catch (error) {
+    console.error("Chat error:", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Failed to generate chat response" });
+    } else {
+      res.end("\n[Error: Connection dropped]");
+    }
+  }
 });
 
 export default router;
