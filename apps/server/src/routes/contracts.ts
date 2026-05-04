@@ -68,6 +68,22 @@ router.get('/', requireAuth, async (req, res) => {
   }
 });
 
+// GET /api/contracts/:id - Fetch contract and its analysis
+router.get('/:id', requireAuth, async (req, res) => {
+  try {
+    const contract = await Contract.findOne({ _id: req.params.id, userId: req.auth?.userId });
+    if (!contract) return res.status(404).json({ error: 'Contract not found' });
+
+    // Fetch the analysis document linked to this contract (might be null if still analyzing)
+    const analysis = await Analysis.findOne({ contractId: contract._id });
+    
+    res.json({ contract, analysis });
+  } catch (error) {
+    console.error('Fetch contract details error:', error);
+    res.status(500).json({ error: 'Failed to fetch contract details' });
+  }
+});
+
 // GET /api/contracts/:id/stream - Server-Sent Events for analysis progress
 router.get('/:id/stream', requireAuth, async (req, res) => {
   const contractId = req.params.id;
