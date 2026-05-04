@@ -72,6 +72,29 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
   const { contract, analysis } = data;
   const isAnalyzing = contract.status === 'analyzing' || contract.status === 'pending';
 
+  const handleExport = async () => {
+    try {
+      const token = await getToken();
+      const response = await fetch(`http://localhost:3001/api/contracts/${id}/export`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!response.ok) throw new Error('Failed to export');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Analysis-${contract.name.replace(/\.pdf$/i, '')}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Export error:", error);
+      alert("Failed to export report");
+    }
+  };
+
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-gray-950 text-white overflow-hidden">
       {/* LEFT COLUMN: PDF Viewer (55%) */}
@@ -121,20 +144,32 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
       {/* RIGHT COLUMN: Analysis Panel (45%) */}
       <div className="w-[45%] flex flex-col bg-gray-900 shadow-2xl relative z-20">
         {/* Tabs */}
-        <div className="flex border-b border-gray-800 p-4 space-x-2 bg-gray-950">
-          {['summary', 'clauses', 'chat'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab as any)}
-              className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${
-                activeTab === tab 
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'
-              }`}
+        <div className="flex justify-between items-center border-b border-gray-800 p-4 bg-gray-950">
+          <div className="flex space-x-2">
+            {['summary', 'clauses', 'chat'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab as any)}
+                className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${
+                  activeTab === tab 
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+                    : 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+          
+          {!isAnalyzing && analysis && (
+            <button 
+              onClick={handleExport}
+              className="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white text-sm font-medium rounded-lg border border-gray-700 transition-colors shadow-sm"
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              <svg className="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+              Export PDF
             </button>
-          ))}
+          )}
         </div>
 
         {/* Tab Content */}

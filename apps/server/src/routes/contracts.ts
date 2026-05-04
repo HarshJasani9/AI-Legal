@@ -7,6 +7,7 @@ import { Analysis } from '../models/Analysis';
 import { requireAuth } from '../middleware/auth';
 import { analyzeQueue } from '../jobs/analyze.job';
 import { querySimilar } from '../services/vector.service';
+import PDFDocument from 'pdfkit';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -281,6 +282,84 @@ ${contextText}
       res.status(500).json({ error: "Failed to generate chat response" });
     } else {
       res.end("\n[Error: Connection dropped]");
+    }
+  }
+});
+
+// GET /api/contracts/:id/export - Export analysis as PDF
+router.get('/:id/export', requireAuth, async (req, res) => {
+  try {
+    const contract = await Contract.findOne({ _id: req.params.id, userId: req.auth?.userId });
+    if (!contract) return res.status(404).json({ error: 'Contract not found' });
+
+    const analysis = await Analysis.findOne({ contractId: contract._id });
+    if (!analysis) return res.status(400).json({ error: 'Analysis not found' });
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="Analysis-${contract.name.replace(/\.pdf$/i, '')}.pdf"`);
+
+    const doc = new PDFDocument({ margin: 50 });
+    doc.pipe(res);
+
+    // Title
+    doc.fontSize(24).fillColor('#333333').text('AI Contract Analysis Report', { align: 'center' });
+    doc.moveDown(0.5);
+    doc.fontSize(12).fillColor('#666666').text(`Contract: ${contract.name}`, { align: 'center' });
+    doc.moveDown(2);
+
+    // Metadata
+    doc.fontSize(16).fillColor('#222222').text('Metadata', { underline: true });
+    doc.moveDown(0.5);
+    doc.fontSize(12).fillColor('#444444')
+       .text(`Parties: ${analysis.parties.join(', ')}`)
+       .text(`Effective Date: ${analysis.effectiveDate ? new Date(analysis.effectiveDate).toLocaleDateString() : 'N/A'}`)
+       .text(`Termination Date: ${analysis.terminationDate ? new Date(analysis.terminationDate).toLocaleDateString() : 'N/A'}`);
+    doc.moveDown(2);
+
+    // Overall Risk
+    doc.fontSize(16).fillColor('#222222').text('Overall Risk Score', { underline: true });
+    doc.moveDown(0.5);
+    doc.fontSize(14).fillColor(analysis.overallRisk > 70 ? '#ef4444' : analysis.overallRisk > 30 ? '#f59e0b' : '#10b981')
+       .text(`${analysis.overallRisk} / 100`);
+    
+    // Risk Bar
+    const barWidth = 400;
+    const barHeight = 20;
+    const fillWidth = (analysis.overallRisk / 100) * barWidth;
+    doc.rect(50, doc.y + 10, barWidth, barHeight).stroke('#dddddd');
+    doc.rect(50, doc.y + 10, fillWidth, barHeight).fill(analysis.overallRisk > 70 ? '#ef4444' : analysis.overallRisk > 30 ? '#f59e0b' : '#10b981');
+    doc.moveDown(3);
+
+    // Summary
+    doc.fontSize(16).fillColor('#222222').text('Summary', { underline: true });
+    doc.moveDown(0.5);
+    doc.fontSize(12).fillColor('#444444').text(analysis.summary, { align: 'justify' });
+    doc.moveDown(2);
+
+    // Clauses Table
+    doc.addPage();
+    doc.fontSize(16).fillColor('#222222').text('Extracted Clauses', { underline: true });
+    doc.moveDown(1);
+
+    analysis.clauses.forEach((clause: any) => {
+      if (doc.y > 700) doc.addPage();
+      
+      const riskColor = clause.risk === 'high' ? '#ef4444' : clause.risk === 'medium' ? '#f59e0b' : '#10b981';
+      
+      doc.fontSize(14).fillColor('#333333').text(clause.title, { continued: true });
+      doc.fontSize(12).fillColor(riskColor).text(`  [${clause.risk.toUpperCase()} RISK]`);
+      doc.moveDown(0.5);
+      
+      doc.fontSize(10).fillColor('#666666').text('Description:', { underline: true });
+      doc.fontSize(10).fillColor('#444444').text(clause.plainEnglish);
+      doc.moveDown(1);
+    });
+
+    doc.end();
+  } catch (error) {
+    console.error('Export error:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Failed to export PDF' });
     }
   }
 });
