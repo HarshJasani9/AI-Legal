@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY || 'sk_test_mock_key';
 
 export const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: '2024-04-10', // Standardize on a stable Stripe API version
+  apiVersion: '2026-05-27.dahlia', // Standardize on a stable Stripe API version
   appInfo: {
     name: 'Contract AI',
     version: '1.0.0',

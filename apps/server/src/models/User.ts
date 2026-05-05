@@ -5,6 +5,7 @@ export interface IUser {
   email?: string;
   name?: string;
   plan: "free" | "pro";
+  stripeCustomerId?: string;
   contractsUsed: number;
   createdAt: Date;
 }
@@ -33,6 +34,10 @@ const UserSchema = new Schema<IUserDocument, IUserModel>(
       type: String,
       enum: ["free", "pro"],
       default: "free",
+    },
+    stripeCustomerId: {
+      type: String,
+      index: true,
     },
     contractsUsed: {
       type: Number,
