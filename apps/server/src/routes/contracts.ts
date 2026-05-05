@@ -5,6 +5,8 @@ import OpenAI from 'openai';
 import { Contract } from '../models/Contract';
 import { Analysis } from '../models/Analysis';
 import { requireAuth } from '../middleware/auth';
+import { checkPlanLimit } from '../middleware/planGate';
+import { User } from '../models/User';
 import { analyzeQueue } from '../jobs/analyze.job';
 import { querySimilar } from '../services/vector.service';
 import PDFDocument from 'pdfkit';
@@ -23,7 +25,7 @@ const upload = multer({
 });
 
 // POST /api/contracts/upload
-router.post('/upload', requireAuth, upload.single('file'), async (req, res) => {
+router.post('/upload', requireAuth, checkPlanLimit, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -50,6 +52,9 @@ router.post('/upload', requireAuth, upload.single('file'), async (req, res) => {
 
     // Add job to BullMQ for background processing
     await analyzeQueue.add('analyze', { contractId: contract.id });
+
+    // Increment user contracts used
+    await User.updateOne({ clerkId: userId }, { $inc: { contractsUsed: 1 } });
 
     res.json({ contractId: contract.id });
   } catch (error) {

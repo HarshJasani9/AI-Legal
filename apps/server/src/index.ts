@@ -8,6 +8,7 @@ import contractsRouter from "./routes/contracts";
 import remindersRouter from "./routes/reminders";
 import "./jobs/analyze.job";
 import "./jobs/reminder.job";
+import "./jobs/monthlyReset.job";
 
 export const app = express();
 const port = process.env.PORT || 3001;
