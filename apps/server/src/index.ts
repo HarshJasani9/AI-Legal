@@ -7,6 +7,7 @@ import { connectDB } from "./config/db";
 import contractsRouter from "./routes/contracts";
 import remindersRouter from "./routes/reminders";
 import "./jobs/analyze.job";
+import "./jobs/reminder.job";
 
 export const app = express();
 const port = process.env.PORT || 3001;
