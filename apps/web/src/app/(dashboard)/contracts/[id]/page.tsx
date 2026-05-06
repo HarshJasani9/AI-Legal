@@ -7,6 +7,7 @@ import { pdfjs, Document, Page } from 'react-pdf';
 import ContractProgress from '../../../components/ContractProgress';
 import ClauseList from '../../../components/ClauseList';
 import ChatWithContract from '../../../components/ChatWithContract';
+import AnalysisSkeleton from '../../../components/skeletons/AnalysisSkeleton';
 
 // Optional: standard styles for react-pdf (you may safely remove if you don't need text selection)
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -53,8 +54,28 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
 
   if (loading) {
     return (
-      <div className="flex h-[calc(100vh-4rem)] items-center justify-center bg-gray-900 text-white">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
+      <div className="flex h-[calc(100vh-4rem)] bg-gray-950 text-white overflow-hidden">
+        {/* LEFT COLUMN SKELETON */}
+        <div className="w-[55%] border-r border-gray-800 flex flex-col relative bg-gray-900 shadow-inner p-8">
+           <div className="h-full w-full bg-gray-800/50 animate-pulse rounded-xl border border-gray-700 flex items-center justify-center">
+             <div className="flex flex-col items-center space-y-4">
+               <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+               <p className="text-gray-500 font-medium animate-pulse">Loading Document...</p>
+             </div>
+           </div>
+        </div>
+        
+        {/* RIGHT COLUMN SKELETON */}
+        <div className="w-[45%] flex flex-col bg-gray-900 shadow-2xl relative z-20">
+          <div className="p-4 border-b border-gray-800 bg-gray-950 flex space-x-2">
+            <div className="h-10 bg-gray-800 animate-pulse rounded-xl w-24"></div>
+            <div className="h-10 bg-gray-800 animate-pulse rounded-xl w-24"></div>
+            <div className="h-10 bg-gray-800 animate-pulse rounded-xl w-24"></div>
+          </div>
+          <div className="flex-1 overflow-auto p-8 custom-scrollbar">
+            <AnalysisSkeleton />
+          </div>
+        </div>
       </div>
     );
   }
