@@ -6,6 +6,7 @@ import { Contract } from '../models/Contract';
 import { Analysis } from '../models/Analysis';
 import { requireAuth } from '../middleware/auth';
 import { checkPlanLimit } from '../middleware/planGate';
+import { strictLimiter } from '../middleware/rateLimit';
 import { User } from '../models/User';
 import { analyzeQueue } from '../jobs/analyze.job';
 import { querySimilar } from '../services/vector.service';
@@ -25,7 +26,7 @@ const upload = multer({
 });
 
 // POST /api/contracts/upload
-router.post('/upload', requireAuth, checkPlanLimit, upload.single('file'), async (req, res) => {
+router.post('/upload', requireAuth, strictLimiter, checkPlanLimit, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -234,7 +235,7 @@ router.get('/:id/stream', requireAuth, async (req, res) => {
 });
 
 // POST /api/contracts/:id/chat - RAG Chat Stream
-router.post('/:id/chat', requireAuth, async (req, res) => {
+router.post('/:id/chat', requireAuth, strictLimiter, async (req, res) => {
   try {
     const contractId = req.params.id;
     const { question, history } = req.body;

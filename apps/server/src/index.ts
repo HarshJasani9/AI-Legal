@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { User } from "@repo/shared";
 import { connectDB } from "./config/db";
 import contractsRouter from "./routes/contracts";
+import { generalLimiter } from "./middleware/rateLimit";
 import remindersRouter from "./routes/reminders";
 import "./jobs/analyze.job";
 import "./jobs/reminder.job";
@@ -17,6 +18,9 @@ const port = process.env.PORT || 3001;
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+// Apply general rate limiting to all requests
+app.use(generalLimiter);
 
 app.use("/api/contracts", contractsRouter);
 app.use("/api/reminders", remindersRouter);
