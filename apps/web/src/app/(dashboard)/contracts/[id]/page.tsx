@@ -3,18 +3,16 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import axios from 'axios';
-import { pdfjs, Document, Page } from 'react-pdf';
+import dynamic from 'next/dynamic';
 import ContractProgress from '../../../../components/ContractProgress';
 import ClauseList from '../../../../components/ClauseList';
 import ChatWithContract from '../../../../components/ChatWithContract';
 import AnalysisSkeleton from '../../../../components/skeletons/AnalysisSkeleton';
 
-// Optional: standard styles for react-pdf (you may safely remove if you don't need text selection)
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-
-// Configure the PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+const PDFViewer = dynamic(() => import('../../../../components/PDFViewer'), { 
+  ssr: false,
+  loading: () => <div className="text-gray-500 p-20 animate-pulse">Loading PDF engine...</div>
+});
 
 export default function ContractDetailsPage({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -145,19 +143,11 @@ export default function ContractDetailsPage({ params }: { params: { id: string }
         {/* PDF Document Container */}
         <div className="flex-1 overflow-auto p-8 flex justify-center custom-scrollbar">
           <div className="shadow-2xl border border-gray-700 rounded-lg overflow-hidden bg-white">
-            <Document 
-              file={contract.s3Url} 
-              onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-              loading={<div className="text-gray-800 p-20 animate-pulse">Loading Document...</div>}
-            >
-              <Page 
-                pageNumber={pageNumber} 
-                renderTextLayer={true} 
-                renderAnnotationLayer={true}
-                className="max-w-full"
-                width={700}
-              />
-            </Document>
+            <PDFViewer 
+              url={contract.s3Url} 
+              pageNumber={pageNumber} 
+              setNumPages={(n) => setNumPages(n)} 
+            />
           </div>
         </div>
       </div>

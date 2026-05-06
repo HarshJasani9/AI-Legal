@@ -37,7 +37,7 @@ export const analyzeWorker = new Worker<AnalyzeJobData>(
     try {
       // Step 2: Download PDF from Cloudinary and parse it
       console.log(`[Worker] Parsing PDF for contract ID: ${contractId}`);
-      const { text, pageCount, chunks } = await parsePdf(contract.s3Url);
+      const { text, pageCount, chunks } = await parsePdf(contract.s3Url, contract.s3Key);
       
       // Update page count early
       if (pageCount) {

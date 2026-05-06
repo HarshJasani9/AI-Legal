@@ -1,0 +1,255 @@
+[33mcommit ca3c0e4cdab4e6aaf3018bb91afa4d906c6c5c33[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Fri May 1 12:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Sat May 30 11:32:42 2026 +0530
+
+    intial commit and mongoose and database setup
+
+[33mcommit 28e81f6b126e94ae5aaaba79aa2edc5ec4c5450f[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Fri May 1 16:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Fri May 1 16:00:00 2026 +0530
+
+    Cloudinary setup and retrieval pipeline
+
+[33mcommit 3b87d026b2219e63848a7140ea485d25612bcade[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Fri May 1 16:10:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Fri May 1 16:10:00 2026 +0530
+
+    require of pdf-parse
+
+[33mcommit a2349e3b7e69f6f03b3b780f624b149d4e01908d[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Fri May 1 18:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Fri May 1 18:00:00 2026 +0530
+
+    contract route created and the ui page for it
+
+[33mcommit 5341b7c2b018e14f6ba0f8567fc94d4ba36eecc8[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Sat May 2 23:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Sat May 2 23:00:00 2026 +0530
+
+    mongoose analysis model created
+
+[33mcommit 1cf5fac22ee093964776831cb9eda120ecb92037[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Sun May 3 10:15:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Sun May 3 10:15:00 2026 +0530
+
+    BULLmq and redis setup and configuration
+
+[33mcommit 761f6e92439532704e8aaea02479ec1b7303b576[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Sun May 3 10:25:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Sun May 3 10:25:00 2026 +0530
+
+    import of analyze job added
+
+[33mcommit 1a66e408b680d03b1dc86ddcc83abe164a40af77[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Sun May 3 14:40:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Sun May 3 14:40:00 2026 +0530
+
+    Pinecone and openAI api key setup
+
+[33mcommit a59e673247fb2b098d77e1b2d077d0b71e4027e9[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Sun May 3 14:50:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Sun May 3 14:50:00 2026 +0530
+
+    error resolved in vector.service.ts
+
+[33mcommit eea63d6e46a729871f838c8703220feda5f1054f[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Sun May 3 16:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Sun May 3 16:00:00 2026 +0530
+
+    created a ai service for extracting
+
+[33mcommit ae99c33a8bcec53a73d067bfa91fdf5fa8ca38d8[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Sun May 3 18:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Sun May 3 18:00:00 2026 +0530
+
+    added the clause analyse schema in ai.service.ts
+
+[33mcommit c8575a54d2b89bff8b1d73c3f8e3f360a969992c[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Sun May 3 20:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Sun May 3 20:00:00 2026 +0530
+
+    analyze worker processor pipeline added
+
+[33mcommit 3a69168fa4e5ff05ac6472fe0a4d02c95e3b8cd4[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Sun May 3 20:15:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Sun May 3 20:15:00 2026 +0530
+
+    import added to contracts.ts
+
+[33mcommit e31c7150827003da13dd1f04324be4f97f979493[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Mon May 4 10:30:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Mon May 4 10:30:00 2026 +0530
+
+    Implemented the server sent events streaming pipelines
+
+[33mcommit c1f352beb3f7f160a46ba6a41798eeca891b27f2[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Mon May 4 10:45:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Mon May 4 10:45:00 2026 +0530
+
+    Contract details dashboard page added
+
+[33mcommit dc6c9e24c780a5a362b7f811939e87f5184926a2[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Mon May 4 11:30:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Mon May 4 11:30:00 2026 +0530
+
+    ClauseList component and cleaned dashboard page
+
+[33mcommit b949a40f2494947ff07c706e0aaa6c165b9c9837[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Mon May 4 11:40:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Mon May 4 11:40:00 2026 +0530
+
+    a error catch in analysis route and fixed
+
+[33mcommit 3a453668126099125204e53737af55ec53577217[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Mon May 4 12:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Mon May 4 12:00:00 2026 +0530
+
+    RAG pipeline is implemeted
+
+[33mcommit 8afbc72dc5998e2aee637acca004b7b3459f060a[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Mon May 4 16:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Mon May 4 16:00:00 2026 +0530
+
+    built the contract comparison engine
+
+[33mcommit e8f54ab3c7faf29df802a8f77a196c89b06c2a03[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Mon May 4 18:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Mon May 4 18:00:00 2026 +0530
+
+    built the pdf export feature
+
+[33mcommit 7f541c06bcd481ba92744f45cc6790f75477e746[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Tue May 5 10:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Tue May 5 10:00:00 2026 +0530
+
+    added the reminder system
+
+[33mcommit 4a431eb7dbab035b0e2b6076cd76d4246a34c0cb[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Tue May 5 11:30:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Tue May 5 11:30:00 2026 +0530
+
+    Integration of background notification and email system
+
+[33mcommit a5da7afe3b5d879df1ed4e6e7b2105bd9c0b2de7[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Tue May 5 14:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Tue May 5 14:00:00 2026 +0530
+
+    stripe installation and setup
+
+[33mcommit 8fe85949855214f0e5f5ec204b00e7feb2a5cd1d[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Tue May 5 14:45:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Tue May 5 14:45:00 2026 +0530
+
+    Stripe webhook handler implemented
+
+[33mcommit df7b779361c28a5caa731b7eab6f3763921bd320[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Tue May 5 16:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Tue May 5 16:00:00 2026 +0530
+
+    Paywall and Monthly Quota Reached reset system implemented
+
+[33mcommit bee462f34d0af0961e9a1eb12225ae489773870e[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Wed May 6 10:00:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Wed May 6 10:00:00 2026 +0530
+
+    Rate Limiting of 100 req per IP implemented
+
+[33mcommit 604ef2664d59ea7160e687a9e70add94535ad4eb[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Wed May 6 12:37:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Wed May 6 12:37:00 2026 +0530
+
+    Loading Skeleton component and update in dashboard and details view page
+
+[33mcommit cc4ee289faf9575858d5a6802a04f993096ff937[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Wed May 6 14:18:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Wed May 6 14:18:00 2026 +0530
+
+    Fixed typo and import error in some files
+
+[33mcommit 18df9e094c282a782baa63fc1abd03123599f5fd[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Wed May 6 16:34:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Wed May 6 16:34:00 2026 +0530
+
+    Global error handler implementation by App error class and errorhandler middleware
+
+[33mcommit 663e77529f65c479bd179118c3da8f1454a6eef2[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Wed May 6 17:49:00 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Wed May 6 17:49:00 2026 +0530
+
+    env validation
+
+[33mcommit 3e909bc463c99a8e635e9033cbecfa181ac0e349[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Wed May 6 18:17:23 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Wed May 6 18:17:23 2026 +0530
+
+    Readme created
+
+[33mcommit b188e350e1ef3a7b28ab1b1bf1c39bc1d83df335[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author:     HarshJasani9 <your-harsh-email@gmail.com>
+AuthorDate: Wed May 6 18:17:47 2026 +0530
+Commit:     HarshJasani9 <your-harsh-email@gmail.com>
+CommitDate: Wed May 6 18:17:47 2026 +0530
+
+    some env variables typo errors

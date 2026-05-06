@@ -28,9 +28,9 @@ export default function DropZone({ onSuccess }: { onSuccess: (contractId: string
       });
       
       onSuccess(res.data.contractId);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Upload failed', error);
-      alert('Upload failed');
+      alert(error.response?.data?.error || error.message || 'Upload failed');
     } finally {
       setIsUploading(false);
     }

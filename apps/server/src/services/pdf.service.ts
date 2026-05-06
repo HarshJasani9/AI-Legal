@@ -1,10 +1,16 @@
 const pdfParse = require('pdf-parse');
 import axios from 'axios';
+import { getSignedUrl } from './cloudinary.service';
 
 // Download from Cloudinary URL and parse
-export async function parsePdf(cloudinaryUrl: string) {
-  // Fetch the PDF from Cloudinary URL directly
-  const response = await axios.get(cloudinaryUrl, { responseType: 'arraybuffer' });
+export async function parsePdf(url: string, publicId?: string) {
+  // If it's a Cloudinary URL, use getSignedUrl. Otherwise, use the local URL directly.
+  const fetchUrl = (publicId && url.includes('cloudinary'))
+    ? getSignedUrl(publicId) 
+    : url;
+    
+  // Fetch the PDF from Cloudinary
+  const response = await axios.get(fetchUrl, { responseType: 'arraybuffer' });
   const buffer = Buffer.from(response.data);
   const parsed = await pdfParse(buffer);
   

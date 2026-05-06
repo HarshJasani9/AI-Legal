@@ -15,6 +15,7 @@ export async function uploadPdf(buffer: Buffer, fileName: string, userId: string
         folder: `contracts/${userId}`,
         public_id: fileName,
         resource_type: 'raw', // required for PDFs
+        type: 'authenticated', // required to bypass PDF restriction
         format: 'pdf',
       },
       (error, result) => {
@@ -29,4 +30,9 @@ export async function uploadPdf(buffer: Buffer, fileName: string, userId: string
 // Delete a file from Cloudinary
 export async function deleteFile(publicId: string) {
   await cloudinary.uploader.destroy(publicId, { resource_type: 'raw' });
+}
+
+// Get a signed URL to bypass restrictions on raw PDFs
+export function getSignedUrl(publicId: string): string {
+  return cloudinary.url(publicId, { sign_url: true, resource_type: 'raw', type: 'authenticated' });
 }

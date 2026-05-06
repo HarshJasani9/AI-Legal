@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { uploadPdf } from '../services/cloudinary.service';
+import { uploadPdf, getSignedUrl } from '../services/cloudinary.service';
 import OpenAI from 'openai';
 import { Contract } from '../models/Contract';
 import { Analysis } from '../models/Analysis';
@@ -16,9 +16,20 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const router = express.Router();
 
-// Add multer for in-memory file handling
+// Add multer for local file handling
+import path from "path";
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../../uploads'))
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix + '-' + file.originalname)
+  }
+})
+
 const upload = multer({
-  storage: multer.memoryStorage(), // keep file in RAM buffer
+  storage: storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
   fileFilter: (_, file, cb) => {
     file.mimetype === 'application/pdf' ? cb(null, true) : cb(new Error('Only PDFs allowed'));
@@ -26,7 +37,7 @@ const upload = multer({
 });
 
 // POST /api/contracts/upload
-router.post('/upload', requireAuth, strictLimiter, checkPlanLimit, upload.single('file'), async (req, res) => {
+router.post('/upload', requireAuth, strictLimiter, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -35,11 +46,12 @@ router.post('/upload', requireAuth, strictLimiter, checkPlanLimit, upload.single
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const { buffer, originalname } = req.file;
+    const originalname = req.file.originalname;
     const userId = req.auth.userId;
 
-    // Upload buffer directly to Cloudinary
-    const { url, publicId } = await uploadPdf(buffer, originalname, userId);
+    // Local URL for the uploaded PDF
+    const url = `http://localhost:3001/uploads/${req.file.filename}`;
+    const publicId = req.file.filename;
 
     // Save contract to MongoDB
     const contract = await Contract.create({
@@ -47,7 +59,7 @@ router.post('/upload', requireAuth, strictLimiter, checkPlanLimit, upload.single
       name: originalname,
       s3Url: url, // reuse same field - just store Cloudinary URL
       s3Key: publicId, // reuse same field - store Cloudinary publicId
-      fileSize: buffer.length,
+      fileSize: req.file.size,
       status: 'pending',
     });
 

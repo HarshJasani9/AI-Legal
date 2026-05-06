@@ -24,6 +24,10 @@ app.use(express.json());
 // Apply general rate limiting to all requests
 app.use(generalLimiter);
 
+// Serve local uploads
+import path from "path";
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
 app.use("/api/contracts", contractsRouter);
 app.use("/api/reminders", remindersRouter);
 
