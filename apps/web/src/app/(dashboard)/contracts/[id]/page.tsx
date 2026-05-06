@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import axios from 'axios';
 import { pdfjs, Document, Page } from 'react-pdf';
-import ContractProgress from '../../../components/ContractProgress';
-import ClauseList from '../../../components/ClauseList';
-import ChatWithContract from '../../../components/ChatWithContract';
-import AnalysisSkeleton from '../../../components/skeletons/AnalysisSkeleton';
+import ContractProgress from '../../../../components/ContractProgress';
+import ClauseList from '../../../../components/ClauseList';
+import ChatWithContract from '../../../../components/ChatWithContract';
+import AnalysisSkeleton from '../../../../components/skeletons/AnalysisSkeleton';
 
 // Optional: standard styles for react-pdf (you may safely remove if you don't need text selection)
 import 'react-pdf/dist/Page/AnnotationLayer.css';

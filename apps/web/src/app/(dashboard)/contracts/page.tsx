@@ -96,7 +96,7 @@ function ContractListFallback() {
 }
 
 export default async function ContractsPage() {
-  const { userId, getToken } = auth();
+  const { userId, getToken } = await auth();
   
   if (!userId) {
     redirect('/');
