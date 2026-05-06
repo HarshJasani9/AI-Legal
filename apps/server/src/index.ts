@@ -6,6 +6,7 @@ import { User } from "@repo/shared";
 import { connectDB } from "./config/db";
 import contractsRouter from "./routes/contracts";
 import { generalLimiter } from "./middleware/rateLimit";
+import { errorHandler } from "./middleware/errorHandler";
 import remindersRouter from "./routes/reminders";
 import "./jobs/analyze.job";
 import "./jobs/reminder.job";
@@ -35,15 +36,8 @@ app.get("/api/user", (req: Request, res: Response) => {
   res.json(user);
 });
 
-// Global Error Handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({
-    error: {
-      message: err.message || "Internal Server Error",
-    },
-  });
-});
+// Global Error Handler (must be the last middleware)
+app.use(errorHandler);
 
 if (process.env.NODE_ENV !== "test") {
   connectDB().then(() => {
