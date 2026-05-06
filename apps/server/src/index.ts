@@ -1,4 +1,5 @@
 import "dotenv/config";
+import "./config/env"; // Validate environment variables immediately
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
